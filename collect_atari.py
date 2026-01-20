@@ -1,4 +1,4 @@
-import ale_py  # <-- add this line first
+import ale_py  
 import gymnasium as gym
 import numpy as np
 import os
@@ -22,3 +22,4 @@ for ep in range(100):
             break
 
 env.close()
+
