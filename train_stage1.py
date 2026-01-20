@@ -65,7 +65,6 @@ for step, clip in enumerate(loader):
     if step >= MAX_STEPS:
         break
 
-# Save checkpoints once at the end
 import os
 os.makedirs("checkpoints", exist_ok=True)
 
@@ -73,3 +72,4 @@ torch.save(enc.state_dict(), "checkpoints/enc.pt")
 torch.save(pred.state_dict(), "checkpoints/pred.pt")
 
 print("Saved checkpoints to ./checkpoints/")
+
