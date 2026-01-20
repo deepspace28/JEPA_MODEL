@@ -16,9 +16,10 @@ class ActionPredictor(nn.Module):
         z: (B, P, D)
         a: (B,)
         """
-        a = self.embed(a)          # (B, D)
-        a = a.unsqueeze(1)        # (B, 1, D)
-        a = a.expand_as(z)        # (B, P, D)
+        a = self.embed(a)          
+        a = a.unsqueeze(1)        
+        a = a.expand_as(z)        
 
-        z = torch.cat([z, a], dim=-1)  # (B, P, 2D)
+        z = torch.cat([z, a], dim=-1)  
         return self.net(z)
+
