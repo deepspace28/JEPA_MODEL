@@ -12,8 +12,8 @@ class PatchDecoder(nn.Module):
         )
 
     def forward(self, z):
-        # z: (B, T, P, D)
         B, T, P, D = z.shape
-        out = self.net(z)  # (B, T, P, 3*patch*patch)
+        out = self.net(z)  
         out = out.view(B, T, P, 3, self.patch_size, self.patch_size)
         return out
+
