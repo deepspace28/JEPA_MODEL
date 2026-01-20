@@ -7,7 +7,7 @@ from models.decoder import PatchDecoder
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 enc = ViTEncoder(image_size=224).to(device)
-enc.load_state_dict(torch.load("checkpoints/enc.pt"))  # if you saved it
+enc.load_state_dict(torch.load("checkpoints/enc.pt"))  
 enc.eval()
 
 dec = PatchDecoder(dim=768).to(device)
@@ -22,10 +22,8 @@ for step, clip in enumerate(loader):
     with torch.no_grad():
         z = enc(clip)
 
-    # reconstruct patches
     patch_imgs = dec(z)
 
-    # rebuild full frame
     B, T, P, C, H, W = patch_imgs.shape
     grid = int(P ** 0.5)
     patch_imgs = patch_imgs.view(B, T, grid, grid, C, H, W)
@@ -42,3 +40,4 @@ for step, clip in enumerate(loader):
         break
 
 torch.save(dec.state_dict(), "checkpoints/dec.pt")
+
