@@ -22,8 +22,9 @@ class ViTEncoder(nn.Module):
 
         _ = self.vit(x)
 
-        tokens = self._tokens  # shape (B*T, 197, D)
-        tokens = tokens[:, 1:] # remove CLS
+        tokens = self._tokens  
+        tokens = tokens[:, 1:] 
 
         tokens = tokens.view(b, t, tokens.shape[1], tokens.shape[2])
         return tokens
+
