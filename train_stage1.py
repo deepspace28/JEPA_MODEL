@@ -6,7 +6,6 @@ from dataset.video_stream_dataset import LocalVideoDataset
 from models.encoder import ViTEncoder
 from models.predictor import TransformerPredictor
 
-# Config
 CLIP_LEN = 16
 IMG_SIZE = 224
 BATCH_SIZE = 1
@@ -72,4 +71,5 @@ torch.save(enc.state_dict(), "checkpoints/enc.pt")
 torch.save(pred.state_dict(), "checkpoints/pred.pt")
 
 print("Saved checkpoints to ./checkpoints/")
+
 
