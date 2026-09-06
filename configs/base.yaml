@@ -1,0 +1,19 @@
+seed: 42
+device: auto
+paths:
+  train_root: data/clips/train
+  val_root: data/clips/val
+  checkpoints_dir: checkpoints
+model:
+  image_size: 224
+  dim: 768
+  patch_size: 16
+training:
+  batch_size: 2
+  lr: 0.0001
+  ema_momentum: 0.99
+  pred_steps: [1, 2, 4]
+  max_steps: 1000
+  log_interval: 25
+  num_workers: 0
+  amp: true

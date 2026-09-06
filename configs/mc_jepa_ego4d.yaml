@@ -1,0 +1,44 @@
+seed: 42
+device: auto
+paths:
+  train_root: data/clips/train
+  val_root: data/clips/val
+  checkpoints_dir: checkpoints/ego4d
+  artifacts_dir: artifacts/mc_jepa/ego4d
+model:
+  image_size: 224
+  dim: 768
+  patch_size: 16
+  flow_hidden_dim: 256
+training:
+  clip_len: 32
+  batch_size: 2
+  lr: 0.00008
+  weight_decay: 0.01
+  ema_momentum: 0.99
+  pred_steps: [1, 2, 4]
+  lambda_content: 1.0
+  lambda_photo: 1.0
+  lambda_smooth: 0.1
+  max_steps: 4000
+  log_interval: 25
+  num_workers: 4
+  amp: true
+visualization:
+  save_every: 250
+  max_images: 8
+benchmark:
+  seeds: [42, 43, 44]
+  ablations:
+    - name: full
+      lambda_content: 1.0
+      lambda_photo: 1.0
+      lambda_smooth: 0.1
+    - name: no_motion
+      lambda_content: 1.0
+      lambda_photo: 0.0
+      lambda_smooth: 0.0
+    - name: no_content
+      lambda_content: 0.0
+      lambda_photo: 1.0
+      lambda_smooth: 0.1

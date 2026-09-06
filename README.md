@@ -1,101 +1,84 @@
 # JEPA_MODEL
 
-JEPA Model (Joint Embedding Predictive Architecture)
+Professional, reproducible implementation of JEPA-style training with an MC-JEPA-inspired joint objective (content + motion).
 
-This repository contains an experimental implementation of a Joint Embedding Predictive Architecture (JEPA)–style model for learning representations without explicit reconstruction or contrastive objectives.
+Reference paper:
+- MC-JEPA: *A Joint-Embedding Predictive Architecture for Self-Supervised Learning of Motion and Content Features* (arXiv:2307.12698v1, July 24, 2023)
 
-The core idea is simple:
-predict representations, not pixels.
+## Installation
 
-Overview
-
-JEPA is a self-supervised learning paradigm where a model learns by predicting the latent representation of a target signal from a context signal, rather than reconstructing raw inputs.
-
-This repository explores:
-
-Representation prediction in latent space
-
-Decoupling prediction from reconstruction loss
-
-A minimal, inspectable JEPA-style training loop
-
-The implementation is intentionally lightweight to make the learning dynamics easy to study, modify, and extend.
-
-Key Concepts
-
-Context Encoder
-Encodes partial or masked input into a latent representation.
-
-Target Encoder
-Encodes the full or target signal into a latent representation (often stop-gradient or EMA-based in advanced variants).
-
-Predictor Network
-Maps context embeddings to predicted target embeddings.
-
-Objective
-Minimize distance between predicted and target embeddings in latent space.
-
-No pixel-level reconstruction.
-No contrastive negative sampling.
-
-Installation
-
-Clone the repository:
-
-git clone https://github.com/deepspace28/JEPA_MODEL.git
-cd JEPA_MODEL
-
-
-Install dependencies:
-
+```bash
+python -m venv .venv
+# PowerShell:
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+pip install -e .
+```
 
+## Dataset Presets
 
-Recommended: use a virtual environment.
+Available presets for preprocessing:
+- `kinetics`
+- `something-something`
+- `ego4d`
 
-Usage
+## Real Data Pipeline
 
-Run the training script (example):
+1) Put raw videos under one root, e.g. `data/raw_videos/`.
 
-python src/train.py
+2) Build clips with a preset:
 
+Kinetics-style:
+```bash
+python scripts/prepare_videos.py --preset kinetics --input-root data/raw_videos --train-out data/clips/train --val-out data/clips/val
+```
 
-You can modify:
+Something-Something-style:
+```bash
+python scripts/prepare_videos.py --preset something-something --input-root data/raw_videos --train-out data/clips/train --val-out data/clips/val
+```
 
-model depth and embedding size
+Ego4D-style:
+```bash
+python scripts/prepare_videos.py --preset ego4d --input-root data/raw_videos --train-out data/clips/train --val-out data/clips/val
+```
 
-masking strategy
+3) Train with matching config:
 
-loss function
+Kinetics:
+```bash
+python scripts/train.py train-mc-jepa --config configs/mc_jepa_kinetics.yaml
+```
 
-optimizer and learning rate
+Something-Something:
+```bash
+python scripts/train.py train-mc-jepa --config configs/mc_jepa_something_something.yaml
+```
 
-to experiment with different JEPA-style behaviors.
+Ego4D:
+```bash
+python scripts/train.py train-mc-jepa --config configs/mc_jepa_ego4d.yaml
+```
 
-Why JEPA?
+4) Run ablation benchmark:
 
-Traditional self-supervised methods often rely on:
+```bash
+python scripts/train.py benchmark-mc-jepa --config configs/mc_jepa_kinetics.yaml
+```
 
-reconstruction losses (autoencoders), or
+## Output Artifacts
 
-contrastive losses with large batch sizes.
+Saved under `artifacts/mc_jepa/<preset>/`:
+- `mcjepa_losses.png`
+- `sample_step_*.png`
+- `benchmark/benchmark_runs.csv`
+- `benchmark/benchmark_summary.json`
+- `benchmark/benchmark_ablation.png`
+- `benchmark/REPORT.md`
 
-JEPA-style models aim to:
+## Optional Debug Source
 
-learn semantic structure directly in latent space
-
-reduce dependence on heavy augmentation or negatives
-
-scale more naturally to complex modalities
-
-This repository is a research sandbox, not a production framework.
-
-Status
-
-Experimental
-
-Research-focused
-
-Actively iterated
-
-Expect breaking changes.
+Atari collector is kept only for debugging:
+```bash
+python scripts/collect_atari.py
+```
